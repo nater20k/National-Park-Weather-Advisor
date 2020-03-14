@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Capstone.Web.Models.Park>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="grid-container">
+    @foreach (Park park in Model)
+    {
+        <div class="img-container">
+            <a asp-action="Detail" asp-route-ParkCode="@park.ParkCode"><img class="park-image" src="~/img/parks/@(park.ParkCode).jpg" /></a>
+        </div>
+        <div class="desc-container">
+            <a asp-action="Detail" asp-route-ParkCode="@park.ParkCode"><h2>@park.ParkName</h2></a>
+            <h4 class="state">@park.State</h4>
+            <p>@park.ParkDescription</p>
+        </div>
+    }
+    </div>
+
+

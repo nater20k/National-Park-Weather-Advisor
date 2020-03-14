@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Capstone.Web.Models.Park>
+
+@{
+    ViewData["Title"] = "BestParks";
+}
+
+<h2>America's Favorite Parks</h2>
+
+<div class="survey-grid-container">
+    <div>
+    </div>
+    <div>
+    </div>
+    <div style="display: flex; justify-content: center">
+        <h3>Number of Votes</h3>
+    </div>
+    @foreach (Park park in Model)
+    {
+        <div class="img-container">
+            <a asp-controller="Park" asp-action="Detail" asp-route-ParkCode="@park.ParkCode"><img class="park-image" src="~/img/parks/@(park.ParkCode).jpg" /></a>
+        </div>
+        <div class="survey-park-name">
+            <h4><a asp-controller="Park" asp-action="Detail" asp-route-ParkCode="@park.ParkCode">@park.ParkName</a></h4>
+        </div>
+        <div class="survey-vote-count">
+            <h4>@park.VoteCount</h4>
+        </div>
+    }
+</div>

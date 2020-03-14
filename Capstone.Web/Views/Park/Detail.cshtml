@@ -1,0 +1,118 @@
+﻿@using Microsoft.AspNetCore.Http;
+@model Capstone.Web.Models.Park
+
+@{
+    ViewBag.Park = Model.ParkCode;
+
+    string snow = "Pack snowshoes. ";
+    string cold = "Prolonged exposure to cold is dangerous. ";
+    string sunny = "Pack sunblock. ";
+    string hot = "Bring an extra gallon of water. ";
+    string variant = "Wear breathable layers. ";
+    string rain = "Pack raingear, and wear water-proof shoes. ";
+    string thunderstorms = "Seek shelter and avoid hiking on exposed ridges. ";
+
+}
+
+<div class="detail-name">
+
+    <h1>@Model.ParkName</h1>
+    <h3>@Model.State</h3>
+</div>
+<div class="detail-grid">
+    <div class="detail-img">
+        <img class="park-image" src="~/img/parks/@(Model.ParkCode).jpg" />
+    </div>
+    <div class="detail-list">
+        <ul>
+            <li><b>Entry Fee:</b> $@(Model.EntryFee)</li>
+            <li><b>Acreage:</b> @(Model.Acreage)</li>
+            <li><b>Elevation:</b> @(Model.ElevationInFeet) ft</li>
+            <li><b>Miles of Trails:</b> @(Model.MilesOfTrail)</li>
+            <li><b>Number of Campsites:</b> @(Model.NumberOfCampsites)</li>
+            <li><b>Climate:</b> @(Model.Climate)</li>
+            <li><b>Year Founded:</b> @(Model.YearFounded)</li>
+            <li><b>Annual Visitor Count:</b> @(Model.AnnualVisitorCount)</li>
+        </ul>
+    </div>
+    <div class="quote">
+        <p><i>"@(Model.InspirationalQuote)"</i></p>
+        <p>-@(Model.InspirationalQuoteSource)</p>
+    </div>
+</div>
+<hr />
+<div>
+    <p>@(Model.ParkDescription)</p>
+</div>
+<hr />
+<div class="forecast-title">
+    <div>
+        <h4>5-Day Forecast</h4>
+    </div>
+    <div>
+        <div>
+            <span><a asp-action="FOrC" asp-controller="Home" asp-route-choice="F" asp-route-parkCode ="@(Model.ParkCode)">F /</a></span>
+            <span><a asp-action="FOrC" asp-controller="Home" asp-route-choice="C" asp-route-parkCode ="@(Model.ParkCode)">C</a></span>
+        </div>
+    </div>
+</div>
+<div class="weather-grid">
+    @foreach(Forecast forecast in ViewBag.ParkForecast)
+    {
+        <h5>@DateTime.Now.AddDays(forecast.FiveDayForecastValue -1).ToShortDateString()</h5>
+    }
+
+    @foreach (Forecast forecast in ViewBag.ParkForecast)
+    {
+
+        <div class="day-weather">
+            <img src="~/img/weather/@(forecast.ForecastType).svg" />
+            <div class="high-low">
+                @if (ViewBag.Temp == "C")
+                {
+                <h4 class="high-temp">High: @Math.Round((forecast.High - 32.0) * (5.0 / 9.0))&deg;C</h4>
+                <h4 class="low-temp">Low : @Math.Round((forecast.Low - 32.0) * (5.0 / 9.0))&deg;C</h4>
+                }
+                else
+                {
+                <h4 class="high-temp">High: @forecast.High&deg;F</h4>
+                <h4 class="low-temp">Low: @forecast.Low&deg;F</h4>
+                }
+            </div>
+            <div></div>
+        </div>
+    }
+    @foreach (Forecast forecast in ViewBag.ParkForecast)
+    {
+        string weatherAdvice = "";
+        if (forecast.ForecastType == "snow")
+        {
+            weatherAdvice += snow;
+        }
+        if (forecast.Low < 20)
+        {
+            weatherAdvice += cold;
+        }
+        if (forecast.ForecastType == "sunny")
+        {
+            weatherAdvice += sunny;
+        }
+        if (forecast.High > 75)
+        {
+            weatherAdvice += hot;
+        }
+        if (forecast.High - forecast.Low > 20)
+        {
+            weatherAdvice += variant;
+        }
+        if (forecast.ForecastType == "rain")
+        {
+            weatherAdvice += rain;
+        }
+        if (forecast.ForecastType == "thunderstorms")
+        {
+            weatherAdvice += thunderstorms;
+        }
+        <p class="advice">@weatherAdvice</p>
+    }
+</div>
